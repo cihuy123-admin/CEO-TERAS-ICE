@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TerasIce — Pemesanan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand brand--text">
+          <div class="brand__mark" aria-label="TERASICE : ICE CREAM & FLOAT SPECIALIST">
+            <div class="brand__name brand__name--big">TERASICE</div>
+            <div class="brand__tagline">ICE CREAM &amp; FLOAT SPECIALIST</div>
+          </div>
+        </div>
+
+        <nav class="topbar__nav">
+          <a class="btn btn--ghost" href="./admin.html" title="Admin">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page">
+      <section class="hero">
+        <div class="hero__left">
+          <h1 class="hero__title">Laman Pemesanan</h1>
+          <p class="hero__subtitle">
+            Pilih menu favoritmu, tentukan <b>dine-in</b> atau <b>takeaway</b>, lalu pilih metode
+            pembayaran.
+          </p>
+          <div class="chips">
+            <div class="chip" id="clockChip">Memuat waktu…</div>
+            <div class="chip chip--soft" id="queueChip">Antrian hari ini: —</div>
+          </div>
+        </div>
+        <div class="hero__right">
+          <div class="card card--glow">
+            <div class="card__title">Ringkasan Pesanan</div>
+            <div class="summary">
+              <div class="summary__row">
+                <div class="summary__label">Nama</div>
+                <div class="summary__value" id="summaryName">—</div>
+              </div>
+              <div class="summary__row">
+                <div class="summary__label">Tipe</div>
+                <div class="summary__value" id="summaryType">—</div>
+              </div>
+              <div class="summary__row">
+                <div class="summary__label">Pembayaran</div>
+                <div class="summary__value" id="summaryPay">—</div>
+              </div>
+              <div class="summary__divider"></div>
+              <div class="summary__row">
+                <div class="summary__label">Subtotal</div>
+                <div class="summary__value" id="summarySubtotal">Rp 0</div>
+              </div>
+              <div class="summary__row">
+                <div class="summary__label">Diskon</div>
+                <div class="summary__value" id="summaryDiscount">Rp 0</div>
+              </div>
+              <div class="summary__divider"></div>
+              <div class="summary__row summary__row--big">
+                <div class="summary__label">Total Bayar</div>
+                <div class="summary__value" id="summaryTotal">Rp 0</div>
+              </div>
+              <button class="btn btn--primary btn--wide" id="submitBtn">Buat Pesanan</button>
+              <p class="hint">
+                Maks. beli per menu: <b id="maxPerItemLabel">5</b> pcs (bisa diubah admin).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls">
+        <div class="card">
+          <div class="card__title">0) Data Pemesan</div>
+          <div class="row">
+            <div class="field" style="min-width: 260px">
+              <label>Nama Pemesan</label>
+              <input class="input" id="buyerName" placeholder="Contoh: Andi" />
+              <div class="small">Nama akan tampil di struk/antrian.</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__title">1) Pilih Tipe Pesanan</div>
+          <div class="radio-grid" id="typeGroup">
+            <label class="radio-card">
+              <input type="radio" name="orderType" value="Dine-in" />
+              <span class="radio-card__title">Dine-in</span>
+              <span class="radio-card__desc">Makan di tempat</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="orderType" value="Takeaway" />
+              <span class="radio-card__title">Takeaway</span>
+              <span class="radio-card__desc">Dibawa pulang</span>
+            </label>
+          </div>
+          <div id="tableCard" style="margin-top:12px;display:none">
+            <div class="field" style="min-width:260px">
+              <label>Nomor Meja (Dine-in)</label>
+              <select class="input" id="tableNumber">
+                <option value="">Pilih meja…</option>
+              </select>
+              <div class="small" id="tableHint"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">2) Metode Pembayaran</div>
+          <div class="radio-grid" id="payGroup">
+            <label class="radio-card">
+              <input type="radio" name="payment" value="Cash (Tunai) di kasir" />
+              <span class="radio-card__title">Cash (Tunai)</span>
+              <span class="radio-card__desc">Bayar di kasir</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="payment" value="QRIS" />
+              <span class="radio-card__title">QRIS</span>
+              <span class="radio-card__desc">Scan QRIS</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">3) Kode Diskon (Opsional)</div>
+          <div class="row">
+            <div class="field" style="min-width: 260px">
+              <label>Kode Diskon</label>
+              <input class="input" id="discountCode" placeholder="Contoh: HEMAT10" />
+              <div class="small" id="discountHint"></div>
+            </div>
+            <div class="field" style="min-width: 180px; justify-content:flex-end">
+              <label>&nbsp;</label>
+              <button class="btn btn--ghost" id="applyDiscountBtn" type="button">Terapkan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls" style="margin-top: 14px">
+        <div class="card" id="qrisCard" style="display: none">
+          <div class="card__title">QRIS</div>
+          <p class="muted" style="margin-top: 0">
+            Silakan scan QRIS di bawah ini. Jika belum ada, admin bisa upload gambar QRIS di panel admin.
+          </p>
+          <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <img
+              id="qrisImg"
+              alt="QRIS"
+              style="width: 260px; max-width: 100%; border-radius: 16px; border: 1px solid rgba(26,20,15,.10); background: rgba(26,20,15,.03)"
+            />
+            <div class="small" id="qrisHint" style="max-width: 420px"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="menu">
+        <div class="section-head">
+          <h2>Menu Ice Cream</h2>
+          <p class="muted">Geser jumlah, stok akan berkurang setelah pesanan dibuat.</p>
+        </div>
+        <div class="grid" id="icecreamGrid"></div>
+
+        <div class="section-head section-head--spaced">
+          <h2>Minuman Float</h2>
+          <p class="muted">Per menu bisa dibeli beberapa pcs, sesuai batas admin.</p>
+        </div>
+        <div class="grid" id="floatGrid"></div>
+      </section>
+    </main>
+
+    <div class="modal" id="modal" aria-hidden="true">
+      <div class="modal__backdrop" data-close="true"></div>
+      <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal__head">
+          <div class="modal__title" id="modalTitle">Pesanan Berhasil</div>
+          <button class="icon-btn" data-close="true" aria-label="Tutup">✕</button>
+        </div>
+        <div class="modal__body">
+          <div class="ticket">
+            <div class="ticket__top">
+              <div>
+                <div class="ticket__brand">TerasIce</div>
+                <div class="ticket__meta" id="ticketTime">—</div>
+                <div class="ticket__meta" id="ticketSerial">—</div>
+              </div>
+              <div class="ticket__queue">
+                <div class="ticket__queueLabel">No. Antrian</div>
+                <div class="ticket__queueValue" id="ticketQueue">—</div>
+              </div>
+            </div>
+            <div class="ticket__line"></div>
+            <div class="ticket__rows" id="ticketItems"></div>
+            <div class="ticket__line"></div>
+            <div class="ticket__bottom">
+              <div class="ticket__meta" id="ticketTypePay">—</div>
+              <div class="ticket__total" id="ticketTotal">Rp 0</div>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 12px">
+            Simpan nomor antrian untuk dipanggil saat pesanan siap.
+          </p>
+        </div>
+        <div class="modal__foot">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;width:100%">
+            <button class="btn btn--ghost" id="printReceiptBtn" type="button">Cetak / Simpan PDF</button>
+            <button class="btn btn--ghost" id="downloadReceiptBtn" type="button">Download Nota</button>
+            <button class="btn btn--primary" data-close="true" type="button">Selesai</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="small">© <span id="copyrightYear"></span> TerasIce. Hak cipta dilindungi.</div>
+      </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

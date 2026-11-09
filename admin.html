@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TerasIce — Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand brand--text">
+          <div class="brand__mark" aria-label="TERASICE : ICE CREAM & FLOAT SPECIALIST">
+            <div class="brand__name brand__name--big">TERASICE</div>
+            <div class="brand__tagline">ICE CREAM &amp; FLOAT SPECIALIST</div>
+            <div class="brand__tag">Admin — Stok &amp; Pengaturan</div>
+          </div>
+        </div>
+
+        <nav class="topbar__nav">
+          <a class="btn btn--ghost" href="./index.html">Kembali ke Pemesanan</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container page">
+      <div class="admin-head">
+        <div>
+          <h1>Panel Admin</h1>
+          <div class="small" id="adminClock">—</div>
+        </div>
+        <div>
+          <button class="btn btn--ghost" id="logoutBtn" style="display: none">Logout</button>
+        </div>
+      </div>
+
+      <section class="stack" id="loginSection">
+        <div class="card">
+          <div class="card__title">Login Admin</div>
+          <p class="muted" style="margin-top: 0">
+            Halaman ini khusus admin (customer tidak bisa masuk tanpa akun).
+          </p>
+          <div class="row">
+            <div class="field">
+              <label>Username</label>
+              <input class="input" id="username" placeholder="Masukkan username" autocomplete="username" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input
+                class="input"
+                id="password"
+                type="password"
+                placeholder="Masukkan password"
+                autocomplete="current-password"
+              />
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end">
+            <button class="btn btn--primary" id="loginBtn">Masuk</button>
+          </div>
+          <p class="small" id="loginHint" style="margin: 10px 0 0"></p>
+        </div>
+      </section>
+
+      <section class="stack" id="adminSection" style="display: none">
+        <div class="card">
+          <div class="card__title">Pengaturan</div>
+          <div class="row">
+            <div class="field">
+              <label>Maksimal beli per menu (pcs / item)</label>
+              <input class="input" type="number" min="1" step="1" id="maxPerItem" />
+              <div class="small">
+                Contoh: 5 berarti customer hanya bisa pesan max 5 pcs untuk setiap menu.
+              </div>
+            </div>
+            <div class="field">
+              <label>Jumlah Meja (Dine-in)</label>
+              <input class="input" type="number" min="1" step="1" id="tableCount" />
+              <div class="small">
+                Default 10. Admin bisa menambah/mengurangi. Jika mengurangi, pastikan meja yang dihapus sedang kosong.
+              </div>
+            </div>
+            <div class="field" style="min-width: 260px">
+              <label>Fitur Meja (Opsional)</label>
+              <label style="display:flex;align-items:center;gap:10px;margin-top:6px">
+                <input type="checkbox" id="enableTableSelection" />
+                <span style="font-weight:800">Aktifkan pemilihan meja (Dine-in)</span>
+              </label>
+              <div class="small">
+                Jika dimatikan, customer tidak bisa memilih meja. Nyalakan lagi jika suatu waktu dibutuhkan.
+              </div>
+            </div>
+            <div class="field">
+              <label>Antrian hari ini</label>
+              <input class="input" id="queueInfo" disabled />
+              <div class="small">Antrian otomatis reset saat hari berganti.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--ghost" id="resetQueueBtn">Reset Antrian (Hari Ini)</button>
+            <button class="btn btn--primary" id="saveSettingsBtn">Simpan Pengaturan</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">QRIS (Upload Gambar)</div>
+          <div class="small" style="margin-bottom: 10px">
+            Upload gambar QRIS (PNG/JPG). Setelah disimpan, QRIS akan muncul otomatis di laman pemesanan saat memilih
+            pembayaran QRIS.
+          </div>
+          <div class="row" style="align-items:flex-start">
+            <div class="field" style="min-width: 280px">
+              <label>File QRIS</label>
+              <input class="input" id="qrisFile" type="file" accept="image/*" />
+              <div class="small">Disimpan lokal di browser (localStorage).</div>
+            </div>
+            <div class="field" style="min-width: 260px; max-width: 360px">
+              <label>Preview</label>
+              <img
+                id="qrisPreview"
+                alt="Preview QRIS"
+                style="width: 100%; border-radius: 16px; border: 1px solid rgba(26,20,15,.10); background: rgba(26,20,15,.03)"
+              />
+              <div class="small" id="qrisStatus" style="margin-top: 6px"></div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--ghost" id="removeQrisBtn">Hapus QRIS</button>
+            <button class="btn btn--primary" id="saveQrisBtn">Simpan QRIS</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Akun Admin</div>
+          <div class="small" style="margin-bottom: 10px">
+            Tambah username/password admin jika dibutuhkan. Catatan: password tidak ditampilkan (hanya bisa diubah).
+          </div>
+          <div style="overflow:auto">
+            <table class="table" id="adminsTable"></table>
+          </div>
+          <div style="margin-top: 12px" class="row">
+            <div class="field" style="min-width: 260px">
+              <label>Tambah Admin — Username</label>
+              <input class="input" id="newAdminUsername" placeholder="contoh: kasir2" />
+            </div>
+            <div class="field" style="min-width: 260px">
+              <label>Tambah Admin — Password</label>
+              <input class="input" id="newAdminPassword" type="password" placeholder="minimal 4 karakter" />
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--primary" id="addAdminBtn">Tambah Admin</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Kelola Menu (Harga & Stok)</div>
+          <div class="small" style="margin-bottom: 10px">
+            Di sini admin bisa <b>edit harga</b>, <b>edit stok</b>, serta <b>tambah menu</b> baru.
+          </div>
+
+          <div style="overflow: auto">
+            <table class="table" id="menuTable"></table>
+          </div>
+
+          <div style="margin-top: 12px" class="row">
+            <div class="field" style="min-width: 260px">
+              <label>Tambah Menu — Nama</label>
+              <input class="input" id="newName" placeholder="Contoh: Oreo Blast" />
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Tambah Menu — Kategori</label>
+              <select class="input" id="newCategory">
+                <option value="ICE_CREAM">Ice Cream</option>
+                <option value="FLOAT">Float</option>
+              </select>
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Tambah Menu — Harga</label>
+              <input class="input" id="newPrice" type="number" min="0" step="500" placeholder="15000" />
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Tambah Menu — Stok Awal</label>
+              <input class="input" id="newStock" type="number" min="0" step="1" value="100" />
+            </div>
+          </div>
+
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--ghost" id="setAll100Btn">Set Semua Stok = 100</button>
+            <button class="btn btn--ghost" id="addMenuBtn">Tambah Menu</button>
+            <button class="btn btn--primary" id="saveMenuBtn">Simpan Perubahan</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Diskon / Kode Kupon</div>
+          <div class="small" style="margin-bottom: 10px">
+            Buat kode diskon agar customer bisa memasukkan kode dan mendapatkan potongan harga.
+          </div>
+          <div style="overflow:auto">
+            <table class="table" id="discountsTable"></table>
+          </div>
+          <div style="margin-top: 12px" class="row">
+            <div class="field" style="min-width: 220px">
+              <label>Kode</label>
+              <input class="input" id="newDiscountCode" placeholder="contoh: HEMAT10" />
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Tipe</label>
+              <select class="input" id="newDiscountType">
+                <option value="PERCENT">Persen (%)</option>
+                <option value="AMOUNT">Potongan Rupiah</option>
+              </select>
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Nilai</label>
+              <input class="input" id="newDiscountValue" type="number" min="1" step="1" placeholder="10" />
+              <div class="small">Jika persen: 1–100. Jika rupiah: jumlah potongan.</div>
+            </div>
+            <div class="field" style="min-width: 220px">
+              <label>Aktif?</label>
+              <select class="input" id="newDiscountActive">
+                <option value="1">Aktif</option>
+                <option value="0">Nonaktif</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--primary" id="addDiscountBtn">Tambah Kode Diskon</button>
+          </div>
+        </div>
+
+        <div class="card" id="tablesCard">
+          <div class="card__title">Status Meja</div>
+          <div class="small" style="margin-bottom: 10px">
+            Meja akan otomatis <b>Terisi</b> saat ada pesanan Dine-in dari QR meja, dan bisa di-<b>Selesai</b> untuk mengosongkan.
+          </div>
+          <div id="tablesBox" class="grid" style="grid-template-columns:repeat(5,minmax(0,1fr))"></div>
+          <div class="small" id="tablesHint" style="margin-top: 10px"></div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Rekapan Penjualan (Download)</div>
+          <div class="small" style="margin-bottom: 10px">
+            Pilih rentang tanggal (opsional) lalu download CSV. File CSV bisa dibuka di Excel/Google Sheets untuk rekap.
+          </div>
+          <div class="row">
+            <div class="field" style="min-width: 240px">
+              <label>Dari Tanggal</label>
+              <input class="input" id="salesFrom" type="date" />
+            </div>
+            <div class="field" style="min-width: 240px">
+              <label>Sampai Tanggal</label>
+              <input class="input" id="salesTo" type="date" />
+            </div>
+          </div>
+          <div style="margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap">
+            <button class="btn btn--ghost" id="downloadSalesBtn">Download CSV</button>
+          </div>
+          <div class="small" id="downloadSalesHint" style="margin-top: 10px"></div>
+          <div class="card" style="margin-top: 12px">
+            <div class="card__title">Rekap Otomatis (Tampilan)</div>
+            <div class="small" style="margin-bottom: 10px">Akan terupdate realtime sesuai riwayat pesanan di server.</div>
+            <div class="row">
+              <div class="field" style="min-width: 220px">
+                <label>Total Pesanan</label>
+                <input class="input" id="sumOrders" disabled />
+              </div>
+              <div class="field" style="min-width: 220px">
+                <label>Total Qty Item</label>
+                <input class="input" id="sumQty" disabled />
+              </div>
+              <div class="field" style="min-width: 240px">
+                <label>Total Pendapatan</label>
+                <input class="input" id="sumRevenue" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__title">Riwayat Pesanan (Terakhir)</div>
+          <div class="small" style="margin-bottom: 10px">
+            Riwayat disimpan di server, dan akan terupdate realtime ketika ada pesanan baru.
+          </div>
+          <div id="ordersBox" class="stack"></div>
+          <div style="margin-top: 12px; display: flex; justify-content: flex-end">
+            <button class="btn btn--ghost" id="clearOrdersBtn">Hapus Riwayat</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="small">© <span id="copyrightYearAdmin"></span> TerasIce. Hak cipta dilindungi.</div>
+      </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./admin.js"></script>
+  </body>
+</html>
